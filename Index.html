@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poeira e Redenção — Um Enigma do Velho Oeste</title>
+<style>
+  :root{
+    --bg: #1a130d;
+    --bg2: #241a12;
+    --gold: #c9a24b;
+    --gold-dim: #8a713a;
+    --text: #e8dcc4;
+    --red: #7a1f1f;
+    --shadow: rgba(0,0,0,0.6);
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0; padding:0; height:100%;
+    background: radial-gradient(ellipse at center, var(--bg2) 0%, var(--bg) 80%);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: var(--text);
+  }
+  body{
+    display:flex; align-items:center; justify-content:center;
+    min-height:100vh;
+    padding: 20px;
+  }
+  .frame{
+    max-width: 720px;
+    width:100%;
+    background: linear-gradient(180deg, rgba(36,26,18,0.95), rgba(20,14,9,0.98));
+    border: 2px solid var(--gold-dim);
+    border-radius: 6px;
+    box-shadow: 0 0 40px var(--shadow), inset 0 0 60px rgba(0,0,0,0.5);
+    padding: 36px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .frame::before{
+    content:"";
+    position:absolute; inset:8px;
+    border: 1px solid rgba(201,162,75,0.25);
+    border-radius: 4px;
+    pointer-events:none;
+  }
+  h1{
+    font-size: 1.6em;
+    letter-spacing: 2px;
+    text-align:center;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin: 0 0 4px 0;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+  }
+  .subtitle{
+    text-align:center;
+    color: var(--gold-dim);
+    font-style: italic;
+    margin-bottom: 24px;
+    font-size: 0.95em;
+    letter-spacing: 1px;
+  }
+  .divider{
+    text-align:center;
+    color: var(--gold-dim);
+    margin: 18px 0;
+    letter-spacing: 8px;
+  }
+  #story{
+    font-size: 1.08em;
+    line-height: 1.75;
+    white-space: pre-wrap;
+    margin-bottom: 22px;
+    min-height: 120px;
+    animation: fadeIn 0.8s ease;
+  }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .choices{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  button.choice{
+    background: linear-gradient(180deg, #2c2013, #1e160e);
+    border: 1px solid var(--gold-dim);
+    color: var(--text);
+    padding: 14px 18px;
+    font-size: 1em;
+    font-family: inherit;
+    text-align: left;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 0.3px;
+  }
+  button.choice:hover{
+    background: linear-gradient(180deg, #3a2a17, #2a1f12);
+    border-color: var(--gold);
+    color: var(--gold);
+    transform: translateX(4px);
+  }
+  .puzzle-box{
+    margin-top: 10px;
+    display:flex;
+    gap:10px;
+    flex-wrap: wrap;
+  }
+  input.answer{
+    flex:1;
+    min-width: 160px;
+    background: #14100b;
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    padding: 12px 14px;
+    font-size: 1em;
+    border-radius: 4px;
+    font-family: inherit;
+    letter-spacing: 1px;
+  }
+  input.answer:focus{
+    outline: none;
+    border-color: var(--gold);
+  }
+  button.submit{
+    background: var(--red);
+    border: 1px solid #a83232;
+    color: #f0e0e0;
+    padding: 12px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1em;
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+  }
+  button.submit:hover{
+    background: #8f2626;
+  }
+  .hint{
+    margin-top: 10px;
+    font-size: 0.88em;
+    color: var(--gold-dim);
+    font-style: italic;
+  }
+  .error-msg{
+    color: #d97a7a;
+    font-size: 0.9em;
+    margin-top: 8px;
+    display:none;
+  }
+  .progress{
+    display:flex;
+    justify-content:center;
+    gap:6px;
+    margin-bottom: 20px;
+  }
+  .dot{
+    width:8px; height:8px; border-radius:50%;
+    background: rgba(201,162,75,0.2);
+    transition: background 0.3s ease;
+  }
+  .dot.active{ background: var(--gold); }
+
+  .whatsapp-final{
+    text-align:center;
+    margin-top: 20px;
+  }
+  a.wa-button{
+    display:inline-block;
+    background: #25D366;
+    color: #10371f;
+    font-weight:bold;
+    padding: 14px 28px;
+    border-radius: 30px;
+    text-decoration:none;
+    letter-spacing: 1px;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 16px rgba(37,211,102,0.35);
+    transition: transform 0.2s ease;
+    margin-top: 10px;
+  }
+  a.wa-button:hover{
+    transform: scale(1.05);
+  }
+  .signature{
+    text-align:center;
+    margin-top: 26px;
+    color: var(--gold-dim);
+    font-size: 0.8em;
+    letter-spacing: 1px;
+    font-style: italic;
+  }
+  .answers-recap{
+    margin-top: 26px;
+    padding: 16px 18px;
+    background: rgba(0,0,0,0.25);
+    border: 1px dashed var(--gold-dim);
+    border-radius: 6px;
+    font-size: 0.85em;
+  }
+  .answers-title{
+    color: var(--gold);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .answers-recap ul{
+    margin: 0;
+    padding-left: 18px;
+    line-height: 1.7;
+  }
+  .answers-recap .alt{
+    color: var(--gold-dim);
+    font-style: italic;
+  }
+  .credits{
+    position:absolute;
+    top:10px; right:14px;
+    color: var(--gold-dim);
+    font-size: 0.7em;
+    letter-spacing:1px;
+  }
+  .sound-toggle{
+    position:absolute;
+    top:10px; left:14px;
+    background: transparent;
+    border: 1px solid var(--gold-dim);
+    color: var(--gold-dim);
+    font-size: 0.75em;
+    letter-spacing: 1px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    z-index: 5;
+  }
+  .sound-toggle:hover{
+    color: var(--gold);
+    border-color: var(--gold);
+  }
+  .sound-toggle.muted{
+    opacity: 0.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <button class="sound-toggle" id="soundToggle">🔊 SOM</button>
+  <div class="credits">CAP. <span id="chapNum">1</span>/7</div>
+  <h1>Poeira e Redenção</h1>
+  <div class="subtitle">— um enigma sobre o que fica, quando tudo o mais se vai —</div>
+
+  <div class="progress" id="progress"></div>
+
+  <div id="story"></div>
+
+  <div id="interaction"></div>
+
+  <div class="signature">Cada escolha é uma marca na terra. Ande com cuidado.</div>
+</div>
+
+<script>
+const WHATSAPP_NUMBER = "5561994032833";
+
+const state = {
+  chapter: 0,
+};
+
+/* ======================= MOTOR DE ÁUDIO ======================= */
+/* Música e efeitos sonoros sintetizados via Web Audio API — sem
+   arquivos externos, para funcionar direto no Cloudflare Pages. */
+
+const AudioEngine = (() => {
+  let ctx = null;
+  let masterGain = null;
+  let musicNodes = [];
+  let musicGain = null;
+  let enabled = false;
+  let musicStarted = false;
+
+  function init(){
+    if(ctx) return;
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = ctx.createGain();
+    masterGain.gain.value = 0.9;
+    masterGain.connect(ctx.destination);
+
+    musicGain = ctx.createGain();
+    musicGain.gain.value = 0.16;
+    musicGain.connect(masterGain);
+  }
+
+  function now(){ return ctx.currentTime; }
+
+  // --- Trilha ambiente: acorde de fundo (drone) + vento sintetizado ---
+  function startMusic(){
+    if(musicStarted || !enabled) return;
+    musicStarted = true;
+
+    // Drone grave (violão fantasma / baixo do deserto)
+    const droneFreqs = [82.41, 110.0, 61.74]; // E2, A2, B1 aprox
+    droneFreqs.forEach((f, i) => {
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = f;
+      const g = ctx.createGain();
+      g.gain.value = i === 0 ? 0.5 : 0.28;
+      osc.connect(g);
+      g.connect(musicGain);
+      osc.start();
+      musicNodes.push({osc, gain: g});
+
+      // leve vibrato/lfo para dar vida
+      const lfo = ctx.createOscillator();
+      lfo.frequency.value = 0.08 + i*0.03;
+      const lfoGain = ctx.createGain();
+      lfoGain.gain.value = 1.2;
+      lfo.connect(lfoGain);
+      lfoGain.connect(osc.frequency);
+      lfo.start();
+      musicNodes.push({osc: lfo, gain: lfoGain});
+    });
+
+    // Ruído de vento (filtrado) para atmosfera de deserto
+    const bufferSize = 2 * ctx.sampleRate;
+    const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const output = noiseBuffer.getChannelData(0);
+    for(let i=0;i<bufferSize;i++){ output[i] = Math.random()*2-1; }
+
+    const noise = ctx.createBufferSource();
+    noise.buffer = noiseBuffer;
+    noise.loop = true;
+
+    const noiseFilter = ctx.createBiquadFilter();
+    noiseFilter.type = 'bandpass';
+    noiseFilter.frequency.value = 400;
+    noiseFilter.Q.value = 0.6;
+
+    const noiseGain = ctx.createGain();
+    noiseGain.gain.value = 0.05;
+
+    noise.connect(noiseFilter);
+    noiseFilter.connect(noiseGain);
+    noiseGain.connect(musicGain);
+    noise.start();
+    musicNodes.push({osc: noise, gain: noiseGain});
+
+    // LFO lento modulando o filtro do vento (rajadas)
+    const windLfo = ctx.createOscillator();
+    windLfo.frequency.value = 0.05;
+    const windLfoGain = ctx.createGain();
+    windLfoGain.gain.value = 250;
+    windLfo.connect(windLfoGain);
+    windLfoGain.connect(noiseFilter.frequency);
+    windLfo.start();
+    musicNodes.push({osc: windLfo, gain: windLfoGain});
+
+    // Sino distante ocasional (sino de igreja / campanário de vilarejo)
+    scheduleAmbientBell();
+  }
+
+  function scheduleAmbientBell(){
+    if(!enabled || !musicStarted) return;
+    const delay = 14000 + Math.random()*16000;
+    setTimeout(() => {
+      if(enabled && musicStarted) playBell();
+      scheduleAmbientBell();
+    }, delay);
+  }
+
+  function playBell(){
+    if(!ctx) return;
+    const t = now();
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = 587; // D5
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.06, t+0.02);
+    g.gain.exponentialRampToValueAtTime(0.001, t+3.5);
+    osc.connect(g);
+    g.connect(musicGain);
+    osc.start(t);
+    osc.stop(t+3.6);
+  }
+
+  function stopMusic(){
+    musicNodes.forEach(n => {
+      try{ n.osc.stop(); }catch(e){}
+      try{ n.osc.disconnect(); }catch(e){}
+      try{ n.gain.disconnect(); }catch(e){}
+    });
+    musicNodes = [];
+    musicStarted = false;
+  }
+
+  // --- Efeitos sonoros ---
+  function sfxTick(){
+    if(!enabled || !ctx) return;
+    const t = now();
+    const osc = ctx.createOscillator();
+    osc.type = 'square';
+    osc.frequency.value = 900 + Math.random()*200;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.025, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t+0.03);
+    osc.connect(g);
+    g.connect(masterGain);
+    osc.start(t);
+    osc.stop(t+0.04);
+  }
+
+  function sfxSuccess(){
+    if(!enabled || !ctx) return;
+    const t = now();
+    const notes = [523.25, 659.25, 783.99, 1046.5]; // C5 E5 G5 C6
+    notes.forEach((f, i) => {
+      const osc = ctx.createOscillator();
+      osc.type = 'triangle';
+      osc.frequency.value = f;
+      const g = ctx.createGain();
+      const start = t + i*0.09;
+      g.gain.setValueAtTime(0, start);
+      g.gain.linearRampToValueAtTime(0.18, start+0.02);
+      g.gain.exponentialRampToValueAtTime(0.001, start+0.5);
+      osc.connect(g);
+      g.connect(masterGain);
+      osc.start(start);
+      osc.stop(start+0.55);
+    });
+  }
+
+  function sfxError(){
+    if(!enabled || !ctx) return;
+    const t = now();
+    const osc = ctx.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(180, t);
+    osc.frequency.exponentialRampToValueAtTime(90, t+0.25);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.15, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t+0.3);
+    osc.connect(g);
+    g.connect(masterGain);
+    osc.start(t);
+    osc.stop(t+0.32);
+  }
+
+  function sfxChapter(){
+    // Um "acorde" grave de transição, como um trovão distante suave
+    if(!enabled || !ctx) return;
+    const t = now();
+    const freqs = [98, 123.47, 146.83]; // G2 B2 D3
+    freqs.forEach((f) => {
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = f;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(0.12, t+0.4);
+      g.gain.exponentialRampToValueAtTime(0.001, t+2.2);
+      osc.connect(g);
+      g.connect(masterGain);
+      osc.start(t);
+      osc.stop(t+2.3);
+    });
+  }
+
+  function sfxChoice(){
+    if(!enabled || !ctx) return;
+    const t = now();
+    const osc = ctx.createOscillator();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(340, t);
+    osc.frequency.exponentialRampToValueAtTime(220, t+0.12);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.12, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t+0.15);
+    osc.connect(g);
+    g.connect(masterGain);
+    osc.start(t);
+    osc.stop(t+0.16);
+  }
+
+  function sfxFinal(){
+    // Sino de conquista final, mais longo e caloroso
+    if(!enabled || !ctx) return;
+    const t = now();
+    const notes = [392.0, 493.88, 587.33, 783.99, 987.77]; // G4 B4 D5 G5 B5
+    notes.forEach((f, i) => {
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = f;
+      const g = ctx.createGain();
+      const start = t + i*0.16;
+      g.gain.setValueAtTime(0, start);
+      g.gain.linearRampToValueAtTime(0.16, start+0.05);
+      g.gain.exponentialRampToValueAtTime(0.001, start+2.5);
+      osc.connect(g);
+      g.connect(masterGain);
+      osc.start(start);
+      osc.stop(start+2.6);
+    });
+  }
+
+  function toggle(){
+    init();
+    if(ctx.state === 'suspended'){ ctx.resume(); }
+    enabled = !enabled;
+    if(enabled){
+      startMusic();
+    } else {
+      stopMusic();
+    }
+    return enabled;
+  }
+
+  return {
+    toggle,
+    isEnabled: () => enabled,
+    sfxTick, sfxSuccess, sfxError, sfxChapter, sfxChoice, sfxFinal
+  };
+})();
+
+const soundToggleBtn = document.getElementById('soundToggle');
+soundToggleBtn.addEventListener('click', () => {
+  const isOn = AudioEngine.toggle();
+  soundToggleBtn.textContent = isOn ? '🔊 SOM' : '🔇 MUDO';
+  soundToggleBtn.classList.toggle('muted', !isOn);
+});
+
+const storyEl = document.getElementById('story');
+const interactionEl = document.getElementById('interaction');
+const progressEl = document.getElementById('progress');
+const chapNumEl = document.getElementById('chapNum');
+
+const TOTAL_CHAPTERS = 7;
+
+function renderProgress(current){
+  progressEl.innerHTML = '';
+  for(let i=1;i<=TOTAL_CHAPTERS;i++){
+    const d = document.createElement('div');
+    d.className = 'dot' + (i<=current ? ' active' : '');
+    progressEl.appendChild(d);
+  }
+  chapNumEl.textContent = Math.min(current, TOTAL_CHAPTERS);
+}
+
+function typeText(text, callback){
+  storyEl.textContent = '';
+  let i = 0;
+  const speed = 14;
+  function tick(){
+    if(i < text.length){
+      const ch = text[i];
+      storyEl.textContent += ch;
+      if(ch.trim() !== '' && i % 3 === 0){
+        AudioEngine.sfxTick();
+      }
+      i++;
+      setTimeout(tick, speed);
+    } else if(callback){
+      callback();
+    }
+  }
+  tick();
+}
+
+function renderChoices(choices){
+  interactionEl.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'choices';
+  choices.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.textContent = c.label;
+    btn.onclick = () => { AudioEngine.sfxChoice(); c.action(); };
+    wrap.appendChild(btn);
+  });
+  interactionEl.appendChild(wrap);
+}
+
+function renderPuzzle(puzzle){
+  interactionEl.innerHTML = '';
+  const box = document.createElement('div');
+  box.className = 'puzzle-box';
+
+  const input = document.createElement('input');
+  input.className = 'answer';
+  input.placeholder = puzzle.placeholder || 'Sua resposta...';
+  input.autocomplete = 'off';
+
+  const btn = document.createElement('button');
+  btn.className = 'submit';
+  btn.textContent = 'Responder';
+
+  const errorMsg = document.createElement('div');
+  errorMsg.className = 'error-msg';
+  errorMsg.textContent = puzzle.errorText || 'A resposta não ecoa certo... tente de novo.';
+
+  function trySubmit(){
+    const val = input.value.trim().toLowerCase();
+    const ok = puzzle.accepted.some(a => a.toLowerCase() === val);
+    if(ok){
+      AudioEngine.sfxSuccess();
+      errorMsg.style.display = 'none';
+      puzzle.onSuccess();
+    } else {
+      AudioEngine.sfxError();
+      errorMsg.style.display = 'block';
+      input.style.borderColor = '#a83232';
+      setTimeout(()=>{ input.style.borderColor = 'var(--gold-dim)'; }, 600);
+    }
+  }
+
+  btn.onclick = trySubmit;
+  input.addEventListener('keydown', (e) => { if(e.key === 'Enter') trySubmit(); });
+
+  box.appendChild(input);
+  box.appendChild(btn);
+  interactionEl.appendChild(box);
+
+  if(puzzle.hint){
+    const hint = document.createElement('div');
+    hint.className = 'hint';
+    hint.textContent = puzzle.hint;
+    interactionEl.appendChild(hint);
+  }
+  interactionEl.appendChild(errorMsg);
+
+  setTimeout(()=> input.focus(), 300);
+}
+
+function goTo(chapterFn, chapterIndex){
+  renderProgress(chapterIndex);
+  AudioEngine.sfxChapter();
+  chapterFn();
+}
+
+/* ======================= HISTÓRIA ======================= */
+
+function chapter1(){
+  typeText(
+`Ano de 1899. Poeira vermelha no horizonte, e o sol se põe atrás das montanhas Ashfall.
+
+Você é Elias Cole, um fora da lei cansado. Já matou por dinheiro, já roubou por fome, já cavalgou por vingança. Mas há três noites, um sonho o persegue: uma voz de mulher perguntando "Elias... para que você viveu?"
+
+Seu cavalo para sozinho diante de uma bifurcação na estrada. À esquerda, o caminho leva ao vilarejo de Pinewood, onde dizem que um velho pregador conhece os segredos das almas perdidas. À direita, o caminho segue rumo às montanhas, onde vive - dizem - um eremita que já foi seu parceiro de crimes, anos atrás.
+
+O vento sopra frio. Você precisa decidir.`,
+    () => {
+      renderChoices([
+        { label: '🕊️ Seguir para Pinewood, buscar o pregador', action: () => goTo(chapter2A, 2) },
+        { label: '⛰️ Seguir para as montanhas, buscar o eremita', action: () => goTo(chapter2B, 2) },
+      ]);
+    }
+  );
+}
+
+function chapter2A(){
+  typeText(
+`Pinewood é pequena, cheia de casas de madeira rangendo ao vento. Na igreja improvisada, você encontra o Pregador Amos, cego de um olho, com mãos trêmulas de idade.
+
+"Eu sabia que alguém como você viria," ele diz, sem nem abrir os olhos. "Todo homem que carrega sangue nas mãos, um dia, procura uma igreja vazia."
+
+Ele aponta para uma velha Bíblia sobre o altar, com um cadeado enferrujado preso à capa.
+
+"Essa fechadura só abre para quem souber a resposta certa. Não é um número. É uma palavra que todo homem esquece quando está com medo, e lembra quando está prestes a morrer."
+
+Ele sorri, quase sem dentes: "Qual é a palavra que os homens sussurram nos seus últimos segundos, Elias?"`,
+    () => {
+      renderPuzzle({
+        placeholder: 'Digite a palavra...',
+        accepted: ['perdão', 'perdao'],
+        hint: '💭 Dica: é o que se pede, não o que se dá.',
+        onSuccess: () => goTo(chapter3, 3)
+      });
+    }
+  );
+}
+
+function chapter2B(){
+  typeText(
+`A trilha da montanha é íngreme e traiçoeira. Depois de horas, você encontra uma cabana solitária, fumaça saindo da chaminé torta.
+
+Dentro, sentado perto do fogo, está Cassidy — seu antigo parceiro de assaltos, agora com a barba grisalha e os olhos cansados de quem já parou de fugir.
+
+"Elias Cole," ele diz, sem se levantar. "Pensei que você tivesse morrido enforcado em Armadillo."
+
+Vocês bebem em silêncio por um tempo. Então Cassidy pega um velho baú de madeira, trancado.
+
+"Aqui dentro está tudo que restou da nossa quadrilha. Fotos, cartas, o dinheiro que a gente nunca gastou porque tinha vergonha dele. Só abre quem souber responder isso:"
+
+Ele encara o fogo: "O que um homem constrói, quando já não tem mais nada a roubar?"`,
+    () => {
+      renderPuzzle({
+        placeholder: 'Digite sua resposta...',
+        accepted: ['legado', 'um legado', 'familia', 'família'],
+        hint: '💭 Dica: é aquilo que continua existindo depois que você se vai.',
+        onSuccess: () => goTo(chapter3, 3)
+      });
+    }
+  );
+}
+
+function chapter3(){
+  typeText(
+`A resposta certa faz o cadeado ceder com um estalo seco.
+
+Dentro, você encontra algo in
